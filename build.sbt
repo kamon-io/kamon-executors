@@ -1,5 +1,5 @@
 /* =========================================================================================
- * Copyright © 2013-2016 the kamon project <http://kamon.io/>
+ * Copyright © 2013-2018 the kamon project <http://kamon.io/>
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -12,22 +12,27 @@
  * and limitations under the License.
  * =========================================================================================
  */
-scalaVersion := "2.11.8"
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.2")
 
-resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
-val kamonCore    = "io.kamon" %% "kamon-core"    % "1.0.1"
-val kamonTestkit = "io.kamon" %% "kamon-testkit" % "1.0.1"
+
+val kamonCore       = "io.kamon" %% "kamon-core"              % "1.1.0"
+val kamonTestkit    = "io.kamon" %% "kamon-testkit"           % "1.1.0"
+val scalaExtension  = "io.kamon" %% "kanela-scala-extension"  % "0.0.11"
+
 val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
 
 lazy val root = (project in file("."))
+  .enablePlugins(JavaAgent)
+  .enablePlugins(JmhPlugin)
   .settings(name := "kamon-executors")
-  .settings(aspectJSettings: _*)
+  .settings(scalaVersion := "2.12.2")
+  .settings(crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.2"))
+//  .settings(javaAgents += "io.kamon"  % "kanela-agent"  % "0.0.13"  % "compile;test")
+  .settings(javaAgents += "io.kamon"  % "kanela-agent"  % "0.0.13"  % "compile")
+  .settings(resolvers += Resolver.bintrayRepo("kamon-io", "snapshots"))
+  .settings(resolvers += Resolver.mavenLocal)
   .settings(
       libraryDependencies ++=
-      compileScope(kamonCore, logback) ++
-      testScope(scalatest, logbackClassic, kamonTestkit) ++
-      providedScope(aspectJ)
+      compileScope(kamonCore, logback, scalaExtension) ++
+      testScope(scalatest, logbackClassic, kamonTestkit)
   )
 
-fork := true

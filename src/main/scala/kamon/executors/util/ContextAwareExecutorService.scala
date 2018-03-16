@@ -81,7 +81,7 @@ class ContextAwareExecutorService(underlying: ExecutorService) extends ExecutorS
   }
 }
 
-private[this] class ContextAwareRunnable(r: Runnable) extends Runnable with HasContext {
+class ContextAwareRunnable(r: Runnable) extends Runnable with HasContext {
   override val context: Context = Kamon.currentContext()
 
   override def run(): Unit = {
@@ -91,7 +91,7 @@ private[this] class ContextAwareRunnable(r: Runnable) extends Runnable with HasC
   }
 }
 
-private[this] class ContextAwareCallable[A](c: Callable[A]) extends HasContext with Callable[A] {
+class ContextAwareCallable[A](c: Callable[A]) extends HasContext with Callable[A] {
   override val context: Context = Kamon.currentContext()
 
   override def call(): A = {
