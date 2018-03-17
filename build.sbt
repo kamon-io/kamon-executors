@@ -18,21 +18,39 @@ val kamonCore       = "io.kamon" %% "kamon-core"              % "1.1.0"
 val kamonTestkit    = "io.kamon" %% "kamon-testkit"           % "1.1.0"
 val scalaExtension  = "io.kamon" %% "kanela-scala-extension"  % "0.0.11"
 
-val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
+val guava   = "com.google.guava"  % "guava"           % "24.1-jre"
+val logback = "ch.qos.logback"    % "logback-classic" % "1.2.3"
+
 
 lazy val root = (project in file("."))
+  .settings(noPublishing: _*)
+  .aggregate(executors, benchmark)
+
+val commonSettings = Seq(
+  scalaVersion := "2.12.4",
+  resolvers += Resolver.mavenLocal,
+  crossScalaVersions := Seq("2.12.4", "2.11.8", "2.10.6"),
+  scalacOptions ++= Seq("l:method", "l:classpath", "l:project")
+)
+
+lazy val executors = (project in file("kamon-executors"))
   .enablePlugins(JavaAgent)
-  .enablePlugins(JmhPlugin)
-  .settings(name := "kamon-executors")
-  .settings(scalaVersion := "2.12.2")
-  .settings(crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.2"))
-//  .settings(javaAgents += "io.kamon"  % "kanela-agent"  % "0.0.13"  % "compile;test")
-  .settings(javaAgents += "io.kamon"  % "kanela-agent"  % "0.0.13"  % "compile")
-  .settings(resolvers += Resolver.bintrayRepo("kamon-io", "snapshots"))
-  .settings(resolvers += Resolver.mavenLocal)
+  .settings(moduleName := "kamon-executors")
+  .settings(commonSettings: _*)
+  .settings(javaAgents += "io.kamon"  % "kanela-agent"  % "0.0.13"  % "compile;test")
   .settings(
-      libraryDependencies ++=
+    libraryDependencies ++=
       compileScope(kamonCore, logback, scalaExtension) ++
       testScope(scalatest, logbackClassic, kamonTestkit)
   )
 
+lazy val benchmark = (project in file("kamon-executors-bench"))
+  .enablePlugins(JmhPlugin)
+  .settings(
+    moduleName := "kamon-executors-bench",
+    resolvers += Resolver.mavenLocal,
+    fork in Test := true)
+  .settings(noPublishing: _*)
+  .settings(commonSettings: _*)
+  .settings(libraryDependencies ++= compileScope(guava))
+  .dependsOn(executors)
