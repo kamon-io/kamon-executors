@@ -16,7 +16,7 @@
 
 package kamon.executors.bench
 
-import java.util.concurrent.{ExecutorService, TimeUnit}
+import java.util.concurrent.{Executor, ExecutorService, TimeUnit}
 
 import com.google.common.util.concurrent.MoreExecutors
 import kamon.Kamon
@@ -44,9 +44,8 @@ class ExecutorInstrumentationBenchmark {
   @OutputTimeUnit(TimeUnit.NANOSECONDS)
   @Fork
   def none(blackhole: Blackhole): Unit = {
-//    executor.submit(new BlackholeRunnable(blackhole))
     MoreExecutors.directExecutor.execute(new BlackholeRunnable(blackhole))
-  }
+ }
 
   /**
     * This benchmark attempts to measure the performance with manual context propagation.
@@ -58,7 +57,6 @@ class ExecutorInstrumentationBenchmark {
   @OutputTimeUnit(TimeUnit.NANOSECONDS)
   @Fork
   def manual(blackhole: Blackhole): Unit = {
-//    executor.submit(new ContextAwareRunnable(new BlackholeRunnable(blackhole)))
     MoreExecutors.directExecutor.execute(new ContextAwareRunnable(new BlackholeRunnable(blackhole)))
   }
 
@@ -70,9 +68,8 @@ class ExecutorInstrumentationBenchmark {
   @Benchmark
   @BenchmarkMode(Array(Mode.AverageTime))
   @OutputTimeUnit(TimeUnit.NANOSECONDS)
-  @Fork(jvmArgsAppend = Array("-javaagent:/home/diego/.m2/repository/io/kamon/kanela-agent/0.0.13/kanela-agent-0.0.13.jar"))
+  @Fork(jvmArgsAppend = Array("-javaagent:/home/diego/.m2/repository/io/kamon/kanela-agent/0.0.300/kanela-agent-0.0.300.jar"))
   def automatic(blackhole: Blackhole): Unit = {
-//    executor.submit(new BlackholeRunnable(blackhole))
     MoreExecutors.directExecutor.execute(new BlackholeRunnable(blackhole))
   }
 }
@@ -83,7 +80,7 @@ private class BlackholeRunnable(blackhole: Blackhole) extends Runnable {
   }
 }
 
-//object DirectExecutor extends Executor {
-//  override def execute(command: Runnable): Unit =
-//    command.run()
-//}
+object DirectExecutor extends Executor {
+  override def execute(command: Runnable): Unit =
+    command.run()
+}

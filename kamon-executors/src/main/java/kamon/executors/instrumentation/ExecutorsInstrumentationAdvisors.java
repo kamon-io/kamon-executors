@@ -13,7 +13,7 @@
  * =========================================================================================
  */
 
-package kamon.executors.instrumentation.advisor;
+package kamon.executors.instrumentation;
 
 import kanela.agent.bootstrap.context.ContextHandler;
 import kanela.agent.libs.net.bytebuddy.asm.Advice;
@@ -22,7 +22,8 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public class Advisors {
+public class ExecutorsInstrumentationAdvisors {
+
     public static class RunnableWrapperAdvisor {
         /**
          * Wraps a {@link Runnable} so that it executes with the current context.
@@ -32,7 +33,6 @@ public class Advisors {
             runnable = ContextHandler.wrapInContextAware(runnable);
         }
     }
-
 
     public static class CallableWrapperAdvisor {
         /**
