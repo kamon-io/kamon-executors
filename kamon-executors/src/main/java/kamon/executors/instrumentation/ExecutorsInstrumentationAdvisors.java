@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public class ExecutorsInstrumentationAdvisors {
+final class ExecutorsInstrumentationAdvisors {
 
     public static class RunnableWrapperAdvisor {
         /**

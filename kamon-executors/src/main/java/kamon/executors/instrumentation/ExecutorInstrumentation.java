@@ -28,12 +28,11 @@ import kanela.agent.bootstrap.context.ContextProvider;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
-final public class ExecutorInstrumentation extends KanelaInstrumentation {
+public final class ExecutorInstrumentation extends KanelaInstrumentation {
 
     public ExecutorInstrumentation() {
-
         /**
-         *
+         * Set the ContextProvider
          */
         ContextHandler.setContexProvider(new KamonContextProvider());
 
@@ -65,27 +64,10 @@ final public class ExecutorInstrumentation extends KanelaInstrumentation {
                     .build());
     }
 
-
     /**
-     * implementation of kanela.agent.bootstrap.context.ContextProvider
+     * Runs a Runnable within Kamon Context
      */
-    static class KamonContextProvider implements ContextProvider {
-        @Override
-        public Runnable wrapInContextAware(Runnable runnable) {
-            return new ContextAwareRunnable(runnable);
-        }
-
-        @Override
-        public <A> Callable wrapInContextAware(Callable<A> callable) {
-            return new ContextAwareCallable<>(callable);
-        }
-    }
-
-
-    /**
-     *
-     */
-    static class ContextAwareRunnable implements Runnable {
+    private static class ContextAwareRunnable implements Runnable {
 
         private final Runnable underlying;
         private final Context context;
@@ -107,9 +89,9 @@ final public class ExecutorInstrumentation extends KanelaInstrumentation {
     }
 
     /**
-     *
+     * Runs a Callable within Kamon Context
      */
-    static class ContextAwareCallable<A> implements Callable<A> {
+    private static class ContextAwareCallable<A> implements Callable<A> {
 
         private final Callable<A> underlying;
         private final Context context;
@@ -126,6 +108,21 @@ final public class ExecutorInstrumentation extends KanelaInstrumentation {
             } finally {
                 scope.close();
             }
+        }
+    }
+
+    /**
+     * implementation of kanela.agent.bootstrap.context.ContextProvider
+     */
+    private static class KamonContextProvider implements ContextProvider {
+        @Override
+        public Runnable wrapInContextAware(Runnable runnable) {
+            return new ContextAwareRunnable(runnable);
+        }
+
+        @Override
+        public <A> Callable wrapInContextAware(Callable<A> callable) {
+            return new ContextAwareCallable<>(callable);
         }
     }
 }
