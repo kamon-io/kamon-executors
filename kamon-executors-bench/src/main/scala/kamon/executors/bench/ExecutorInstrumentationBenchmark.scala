@@ -24,15 +24,7 @@ import kamon.executors.util.ContextAwareRunnable
 import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 
-//@State(Scope.Benchmark)
 class ExecutorInstrumentationBenchmark {
-
-//  var executor: ExecutorService = _
-
-//  @Setup
-//  def setup():Unit = {
-//    executor = MoreExecutors.newDirectExecutorService()
-//  }
 
   /**
     * This benchmark attempts to measure the performance without any context propagation.

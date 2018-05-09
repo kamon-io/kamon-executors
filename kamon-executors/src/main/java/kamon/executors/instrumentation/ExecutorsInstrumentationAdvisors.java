@@ -18,9 +18,9 @@ package kamon.executors.instrumentation;
 import kanela.agent.bootstrap.context.ContextHandler;
 import kanela.agent.libs.net.bytebuddy.asm.Advice;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 final class ExecutorsInstrumentationAdvisors {
 
@@ -38,7 +38,7 @@ final class ExecutorsInstrumentationAdvisors {
         /**
          * Wraps a {@link Callable} so that it executes with the current context.
          */
-        @Advice.OnMethodEnter()
+        @Advice.OnMethodEnter
         public static void wrapParam(@Advice.Argument(value = 0, readOnly = false) Callable<?> callable) {
             callable = ContextHandler.wrapInContextAware(callable);
         }
@@ -50,9 +50,11 @@ final class ExecutorsInstrumentationAdvisors {
          */
         @Advice.OnMethodEnter
         public static void wrapParam(@Advice.Argument(value = 0, readOnly = false) Collection<? extends Callable<?>> tasks) {
-            tasks = tasks.stream()
-                    .map(x -> (Callable<?>) ContextHandler.wrapInContextAware(x))
-                    .collect(Collectors.toList());
+            final Collection<Callable<?>> wrappedTasks = new ArrayList<>(tasks.size());
+            for (Callable<?> task : tasks) {
+                if(task != null) wrappedTasks.add(ContextHandler.wrapInContextAware(task));
+            }
+            tasks = wrappedTasks;
         }
     }
 }

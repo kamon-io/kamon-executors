@@ -60,7 +60,7 @@ public final class ExecutorInstrumentation extends KanelaInstrumentation {
                 builder
                     .withAdvisorFor(method("submit").and(withArgument(Runnable.class)), () -> RunnableWrapperAdvisor.class)
                     .withAdvisorFor(method("submit").and(withArgument(Callable.class)), () -> CallableWrapperAdvisor.class)
-                    .withAdvisorFor(anyMethod("invokeAny", "invokeAll").and(withArgument(Collection.class)), () -> CallableCollectionWrapperAdvisor.class)
+                    .withAdvisorFor(anyMethods("invokeAny", "invokeAll").and(withArgument(Collection.class)), () -> CallableCollectionWrapperAdvisor.class)
                     .build());
     }
 
