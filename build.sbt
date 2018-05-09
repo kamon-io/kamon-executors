@@ -13,7 +13,6 @@
  * =========================================================================================
  */
 
-
 val kamonCore       = "io.kamon" %% "kamon-core"              % "1.1.2"
 val kamonTestkit    = "io.kamon" %% "kamon-testkit"           % "1.1.2"
 
@@ -21,7 +20,6 @@ val kaneala         = "io.kamon"  % "kanela-agent"            % "0.0.300"
 val kanelaScala     = "io.kamon" %% "kanela-scala-extension"  % "0.0.10"
 
 val guava           = "com.google.guava"  % "guava"  % "24.1-jre"
-
 
 lazy val root = (project in file("."))
   .settings(noPublishing: _*)
