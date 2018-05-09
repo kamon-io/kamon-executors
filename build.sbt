@@ -14,17 +14,13 @@
  */
 
 
-val kamonCore       = "io.kamon" %% "kamon-core"              % "1.1.1-b8fbb33741cee85fa10ebc23a4d784a690c84da9"
-val kamonTestkit    = "io.kamon" %% "kamon-testkit"           % "1.1.0"
-val scalaExtension  = "io.kamon" %% "kanela-scala-extension"  % "0.0.10"
-val kanealAgent = "io.kamon"  % "kanela-agent"  % "0.0.300"
-val attacher = "io.kamon"  % "kanela-agent-attacher"  % "0.0.10"
+val kamonCore       = "io.kamon" %% "kamon-core"              % "1.1.2"
+val kamonTestkit    = "io.kamon" %% "kamon-testkit"           % "1.1.2"
 
-val guava   = "com.google.guava"  % "guava"           % "24.1-jre"
-val logback = "ch.qos.logback"    % "logback-classic" % "1.2.3"
-val bytebuddyAgent = "net.bytebuddy" % "byte-buddy-agent" % "1.8.0"
-val bytebuddy = "net.bytebuddy" % "byte-buddy" % "1.8.0"
-val objectPool = "com.github.chrisvest" % "stormpot" % "2.4"
+val kaneala         = "io.kamon"  % "kanela-agent"            % "0.0.300"
+val kanelaScala     = "io.kamon" %% "kanela-scala-extension"  % "0.0.10"
+
+val guava           = "com.google.guava"  % "guava"  % "24.1-jre"
 
 
 lazy val root = (project in file("."))
@@ -33,9 +29,9 @@ lazy val root = (project in file("."))
 
 
 val commonSettings = Seq(
-  scalaVersion := "2.12.5",
+  scalaVersion := "2.12.6",
   resolvers += Resolver.mavenLocal,
-  crossScalaVersions := Seq("2.12.5", "2.11.12", "2.10.7"),
+  crossScalaVersions := Seq("2.12.6", "2.11.12", "2.10.7"),
   scalacOptions ++= Seq("-opt:l:method")
 )
 
@@ -46,7 +42,7 @@ lazy val executors = (project in file("kamon-executors"))
   .settings(javaAgents += "io.kamon"  % "kanela-agent"  % "0.0.300"  % "compile;test")
   .settings(
     libraryDependencies ++=
-      compileScope(kamonCore, logback, scalaExtension, bytebuddyAgent, bytebuddy, kanealAgent, attacher, objectPool) ++
+      compileScope(kamonCore, kanelaScala) ++
       testScope(scalatest, logbackClassic, kamonTestkit, guava)
   )
 
