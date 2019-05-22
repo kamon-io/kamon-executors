@@ -21,12 +21,11 @@ val kamonTestkit = "io.kamon" %% "kamon-testkit" % "1.0.1"
 
 lazy val root = (project in file("."))
   .settings(name := "kamon-executors")
-  .settings(aspectJSettings: _*)
+  .settings(instrumentationSettings: _*)
   .settings(
       libraryDependencies ++=
       compileScope(kamonCore) ++
-      testScope(scalatest, kamonTestkit) ++
-      providedScope(aspectJ)
+      testScope(scalatest, kamonTestkit)
   )
 
 fork := true
