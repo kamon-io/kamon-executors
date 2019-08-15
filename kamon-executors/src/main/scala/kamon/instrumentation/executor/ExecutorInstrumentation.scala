@@ -11,6 +11,7 @@ import kamon.metric.Counter
 import kamon.tag.TagSet
 import org.slf4j.LoggerFactory
 
+import scala.beans.BeanProperty
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService}
 import scala.util.Try
 
@@ -310,7 +311,7 @@ object ExecutorInstrumentation {
     *
     * The instruments used to track the pool's behavior are removed once the pool is shut down.
     */
-  class InstrumentedThreadPool(wrapped: ThreadPoolExecutor, name: String, extraTags: TagSet, settings: Settings)
+  class InstrumentedThreadPool(@BeanProperty val wrapped: ThreadPoolExecutor, name: String, extraTags: TagSet, settings: Settings)
       extends ExecutorService {
 
     private val _runableWrapper = buildRunnableWrapper()
@@ -495,7 +496,7 @@ object ExecutorInstrumentation {
     *
     * The instruments used to track the pool's behavior are removed once the pool is shut down.
     */
-  class InstrumentedScheduledThreadPoolExecutor(wrapped: ScheduledThreadPoolExecutor, name: String, extraTags: TagSet)
+  class InstrumentedScheduledThreadPoolExecutor(@BeanProperty override val wrapped: ScheduledThreadPoolExecutor, name: String, extraTags: TagSet)
       extends InstrumentedThreadPool(wrapped, name, extraTags, NoExtraSettings) with ScheduledExecutorService {
 
     override protected def executorType: String =
@@ -523,7 +524,7 @@ object ExecutorInstrumentation {
     *
     * The instruments used to track the pool's behavior are removed once the pool is shut down.
     */
-  class InstrumentedForkJoinPool(wrapped: ExecutorService, telemetryReader: ForkJoinPoolTelemetryReader, name: String,
+  class InstrumentedForkJoinPool(@BeanProperty val wrapped: ExecutorService, telemetryReader: ForkJoinPoolTelemetryReader, name: String,
       extraTags: TagSet, settings: Settings) extends ExecutorService {
 
     private val _runableWrapper = buildRunnableWrapper()
